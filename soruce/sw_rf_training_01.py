@@ -18,6 +18,7 @@ def random_forest_classifier(features, target):
     :param features:
     :param target:
     :return: trained random forest classifier
+    n_estimators=100, max_depth=3
     """
     clf = RandomForestClassifier()
     clf.fit(features, target)
@@ -25,6 +26,7 @@ def random_forest_classifier(features, target):
 
 train_df = pd.read_csv('../data/feature/sw_training_v2.csv')
 test_df = pd.read_csv('../data/feature/sw_testing_v2.csv')
+
 
 print train_df.shape
 print test_df.shape
@@ -94,7 +96,7 @@ print "Train Accuracy :: ", accuracy_score(Y_train, trained_model.predict(X_trai
 print "Test Accuracy  :: ", accuracy_score(Y_test, predictions)
 print " Confusion matrix ", confusion_matrix(Y_test, predictions)
 
-fpr_rf, tpr_rf, _ = roc_curve(Y_test, predictions)
+fpr_rf, tpr_rf, _ = roc_curve(Y_test, predictions, pos_label = 1)
 plt.figure(1)
 plt.plot([0, 1], [0, 1], 'k--')
 plt.plot(fpr_rf, tpr_rf, label='SW_RF')

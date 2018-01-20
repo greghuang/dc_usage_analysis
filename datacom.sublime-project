@@ -13,5 +13,10 @@
 		{
 			"path": "."
 		}
-	]
+	],
+	"settings":
+    {
+        "anaconda_linting": false,
+        "anaconda_linting_behaviour": "always",
+    }
 }
