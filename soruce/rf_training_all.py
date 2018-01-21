@@ -9,7 +9,7 @@ from sklearn.pipeline import make_pipeline
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.metrics import accuracy_score, confusion_matrix
-from sklearn.metrics import roc_curve
+from sklearn.metrics import roc_curve, auc
 from sklearn.externals import joblib
 import seaborn as sns
 
@@ -42,11 +42,12 @@ def prepare(df, threshold=1.0):
 	ndf = df[df._rate <= threshold]
 	print "label count(new):: ", ndf.groupby('_label').size()
 	x = ndf.drop('_label', axis=1)
+	# Drop rate from features
 	x = x.drop('_rate', axis=1)
 	y = ndf.loc[:,'_label']
+	
 	print "data shape::", x.shape
 	print x.columns
-
 	return x, y
 
 def showFeatureImportance(x, clf):
@@ -88,6 +89,8 @@ def validate(y_train_pred, y_train, y_test_pred, y_test):
 
 	fpr_rf_train, tpr_rf_train, _ = roc_curve(y_train, y_train_pred, pos_label = 1)
 	fpr_rf, tpr_rf, _ = roc_curve(y_test, y_test_pred, pos_label = 1)
+	print "AUC:: ", auc(fpr_rf, tpr_rf)
+
 	plt.figure(1)
 	plt.plot([0, 1], [0, 1], 'k--')
 	plt.plot(fpr_rf_train, tpr_rf_train, label='NTF_Train')
@@ -119,7 +122,7 @@ def main():
 	if isTrainAll:
 		allDF = pd.concat([trainDF, testDF])
 		print "all::", allDF.shape
-		X, Y = prepare(allDF, 0.95)
+		X, Y = prepare(allDF, 0.90)
 		# Split data into train set and test set
 		x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.2, random_state=123, stratify=Y)		
 	else:
