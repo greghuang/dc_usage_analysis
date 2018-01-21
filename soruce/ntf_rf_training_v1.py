@@ -100,9 +100,11 @@ def validate(y_train_pred, y_train, y_test_pred, y_test):
 
 def main():
 	print("\n")
-	
-	trainDF = pd.read_csv('../data/feature/ntf_training_v2.csv', index_col=0)
-	testDF = pd.read_csv('../data/feature/ntf_testing_v2.csv', index_col=0)
+	trainDF = pd.read_csv('../data/feature/stat_training_v1.csv', index_col=0)
+	testDF = pd.read_csv('../data/feature/stat_testing_v1.csv', index_col=0)
+
+	# trainDF = pd.read_csv('../data/feature/ntf_training_v2.csv', index_col=0)
+	# testDF = pd.read_csv('../data/feature/ntf_testing_v2.csv', index_col=0)
 
 	# trainDF = pd.read_csv('../data/feature/pc_training_v1.csv', index_col=0)
 	# testDF = pd.read_csv('../data/feature/pc_testing_v1.csv', index_col=0)
@@ -117,7 +119,7 @@ def main():
 	if isTrainAll:
 		allDF = pd.concat([trainDF, testDF])
 		print "all::", allDF.shape
-		X, Y = prepare(allDF, 0.9)
+		X, Y = prepare(allDF, 0.98)
 		# Split data into train set and test set
 		x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.2, random_state=123, stratify=Y)		
 	else:
