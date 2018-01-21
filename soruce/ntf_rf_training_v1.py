@@ -86,8 +86,8 @@ def validate(y_train_pred, y_train, y_test_pred, y_test):
 	print "Accuracy:: ", accuracy_score(y_test, y_test_pred)
 	print " Confusion matrix:: \n", confusion_matrix(y_test, y_test_pred)
 
-	fpr_rf_train, tpr_rf_train, _ = roc_curve(y_train, y_train_pred)
-	fpr_rf, tpr_rf, _ = roc_curve(y_test, y_test_pred)
+	fpr_rf_train, tpr_rf_train, _ = roc_curve(y_train, y_train_pred, pos_label = 1)
+	fpr_rf, tpr_rf, _ = roc_curve(y_test, y_test_pred, pos_label = 1)
 	plt.figure(1)
 	plt.plot([0, 1], [0, 1], 'k--')
 	plt.plot(fpr_rf_train, tpr_rf_train, label='NTF_Train')
@@ -100,8 +100,8 @@ def validate(y_train_pred, y_train, y_test_pred, y_test):
 
 def main():
 	print("\n")
-	trainDF = pd.read_csv('../data/feature/stat_training_v1.csv', index_col=0)
-	testDF = pd.read_csv('../data/feature/stat_testing_v1.csv', index_col=0)
+	# trainDF = pd.read_csv('../data/feature/stat_training_v1.csv', index_col=0)
+	# testDF = pd.read_csv('../data/feature/stat_testing_v1.csv', index_col=0)
 
 	# trainDF = pd.read_csv('../data/feature/ntf_training_v2.csv', index_col=0)
 	# testDF = pd.read_csv('../data/feature/ntf_testing_v2.csv', index_col=0)
@@ -109,8 +109,8 @@ def main():
 	# trainDF = pd.read_csv('../data/feature/pc_training_v1.csv', index_col=0)
 	# testDF = pd.read_csv('../data/feature/pc_testing_v1.csv', index_col=0)
 
-	# trainDF = pd.read_csv('../data/feature/sw_training_v2.csv')
-	# testDF = pd.read_csv('../data/feature/sw_testing_v2.csv')
+	trainDF = pd.read_csv('../data/feature/sw_training_v3.csv', index_col=0)
+	testDF = pd.read_csv('../data/feature/sw_testing_v3.csv', index_col=0)
 
 	# visualize(trainDF)
 	# print trainDF.describe()
@@ -119,7 +119,7 @@ def main():
 	if isTrainAll:
 		allDF = pd.concat([trainDF, testDF])
 		print "all::", allDF.shape
-		X, Y = prepare(allDF, 0.98)
+		X, Y = prepare(allDF, 0.95)
 		# Split data into train set and test set
 		x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.2, random_state=123, stratify=Y)		
 	else:
