@@ -13,16 +13,29 @@ from sklearn.metrics import roc_curve
 from sklearn.externals import joblib
 import seaborn as sns
 
-def prepare(df):
-	x = df.drop('_label', axis=1)
-	y = df.loc[:,'_label']
+def prepare(df, threshold=1.0):	
+	ndf = df[df._rate < threshold]	
+	x = ndf.drop('_label', axis=1)
+	y = ndf.loc[:,'_label']
+	print "new set::", x.shape
 	return x, y
 
 def training(x, y):
-	print("\n-----------RF Classifier-----------")
-	model = RandomForestClassifier(random_state=0)
-	model.fit(x, y)
-	return model
+	print("\n-----------Training RF Classifier-----------")
+	# pipeline = make_pipeline(RandomForestClassifier(n_estimators=50, random_state=0))
+	
+	# hyperparameters = { 
+		# 'randomforestclassifier__max_features' : ['auto', 'log2', 0.8],
+		# 'randomforestclassifier__max_depth': [None, 5, 3, 1],
+		# 'randomforestclassifier__n_estimators': [10, 50, 100, 500],
+	# }
+	clf = RandomForestClassifier(n_estimators=50, max_features='auto', random_state=0)
+	# clf = GridSearchCV(pipeline, hyperparameters, cv=3)
+	# print clf.best_params_
+	# print clf.refit
+	
+	clf.fit(x, y)
+	return clf
 
 def validate(y_train_pred, y_train, y_test_pred, y_test):
 	print "Accuracy :: ", accuracy_score(y_test, y_test_pred)
@@ -41,13 +54,16 @@ def validate(y_train_pred, y_train, y_test_pred, y_test):
 	plt.show()
 
 def main():
+	print "\n"
 	trainDF = pd.read_csv('../data/feature/pc_training_v1.csv', index_col=0)
 	testDF = pd.read_csv('../data/feature/pc_testing_v1.csv', index_col=0)
 	allDF = pd.concat([trainDF, testDF])
-	X, Y = prepare(allDF)
+	print "all::", allDF.shape
+	X, Y = prepare(allDF, 0.9)
+
 	# Split data into train set and test set
 	x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.15, random_state=123, stratify=Y)
-	print x_test.size
+	print x_test.shape
 	
 	tmodel = training(x_train, y_train)
 	y_train_pred = tmodel.predict(x_train)

@@ -25,8 +25,8 @@ def training(x, y):
 	return model
 
 def validate(y_train_pred, y_train, y_test_pred, y_test):
-	print "Accuracy :: ", accuracy_score(y_test, y_test_pred)
-	print " Confusion matrix ", confusion_matrix(y_test, y_test_pred)
+	print "Accuracy:: ", accuracy_score(y_test, y_test_pred)
+	print " Confusion matrix:: \n", confusion_matrix(y_test, y_test_pred)
 
 	fpr_rf_train, tpr_rf_train, _ = roc_curve(y_train, y_train_pred)
 	fpr_rf, tpr_rf, _ = roc_curve(y_test, y_test_pred)
