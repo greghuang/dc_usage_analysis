@@ -46,11 +46,17 @@ def transform(df):
 	}
 	return data
 
+def load(path):
+	df = pd.read_csv(path)
+	# filter out if the death time is too long
+	df = df[df.__NOTIFICATION__death_period < 680400]
+	return df
+
 def main():
 	print('\n')
 	print("------------Load Data------------\n")
-	trainDF = pd.read_csv("../data/training/Train_extracted_notification_feature_2018-01-17_21-20-30.csv")
-	testDF = pd.read_csv("../data/testing/Test_extracted_notification_feature_2018-01-17_21-20-30.csv")
+	trainDF = load("../data/training/Train_extracted_notification_feature_2018-01-17_21-20-30.csv")
+	testDF = load("../data/testing/Test_extracted_notification_feature_2018-01-17_21-20-30.csv")
 
 	trainID = hashEventCase(trainDF)
 	testID = hashEventCase(testDF)
@@ -60,8 +66,8 @@ def main():
 	# print trainData.shape
 	print trainData.describe()
 
-	trainData.to_csv('../data/feature/ntf_training_v2.csv')
-	testData.to_csv('../data/feature/ntf_testing_v2.csv')
+	trainData.to_csv('../data/feature/ntf_training_v3.csv')
+	testData.to_csv('../data/feature/ntf_testing_v3.csv')
 
 if __name__ == "__main__":
     main()
