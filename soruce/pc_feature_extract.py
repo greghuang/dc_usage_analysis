@@ -43,29 +43,29 @@ def transform(df):
 	}
 	return data
 
-def loadData(path):
+def load(path):
 	df = pd.read_csv(path)
 	# filter out if the death time is too long
 	df = df[df.__PARENTALCONTROL__death_period < 680400]
 	return df
 
+def extract(input, output):
+	df = load(input)
+	idDf = hashEventCase(df)
+	featureDf = pd.DataFrame(transform(df), index = idDf)
+	print "shape::", featureDf.shape
+	print "the size of 1::", len(featureDf[featureDf._label == 1].index)
+	print "the size of 0::", len(featureDf[featureDf._label == 0].index)
+	featureDf.to_csv(output)
+
 
 def main():
 	print('\n')
-	print("------------Load Data------------\n")
-	trainDF = loadData("../data/training/Train_extracted_parental_control_feature_2018-01-17_21-20-30.csv")
-	testDF = loadData("../data/testing/Test_extracted_parental_control_feature_2018-01-17_21-20-30.csv")
+	print("------------Extract Training Data------------\n")
+	extract("../data/training/Train_extracted_parental_control_feature_2018-01-17_21-20-30.csv", '../data/feature/pc_training_v2.csv')
 
-	trainID = hashEventCase(trainDF)
-	testID = hashEventCase(testDF)
-	
-	trainData = pd.DataFrame(transform(trainDF), index = trainID)
-	testData = pd.DataFrame(transform(testDF), index = testID)
-	print "Train::", trainData.shape
-	print "Test::", testData.shape
-
-	trainData.to_csv('../data/feature/pc_training_v2.csv')
-	testData.to_csv('../data/feature/pc_testing_v2.csv')
+	print("------------Extract Testing Data------------\n")
+	extract("../data/testing/Test_extracted_parental_control_feature_2018-01-17_21-20-30.csv", '../data/feature/pc_testing_v2.csv')
 
 
 if __name__ == '__main__':

@@ -11,6 +11,7 @@ from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.metrics import accuracy_score, confusion_matrix
 from sklearn.metrics import roc_curve, auc
 from sklearn.externals import joblib
+from sklearn import svm
 import seaborn as sns
 
 def visualize(df):
@@ -44,6 +45,7 @@ def prepare(df, threshold=1.0):
 	x = ndf.drop('_label', axis=1)
 	# Drop rate from features
 	x = x.drop('_rate', axis=1)
+	
 	y = ndf.loc[:,'_label']
 	
 	print "data shape::", x.shape
@@ -60,7 +62,17 @@ def showFeatureImportance(x, clf):
 	for f in range(x.shape[1]):
 		print("%d. feature %d (%f)" % (f + 1, indices[f], importances[indices[f]]))
 
-def training(x, y):
+def fit(x, y):
+	return fitSVM(x, y)
+	# return fitRF(x, y)
+
+def fitSVM(x, y):
+	clf = svm.NuSVC()
+	clf.fit(x, y)
+	# print clf
+	return clf
+
+def fitRF(x, y):
 	print("\n-----------Training RF Classifier-----------")
 	# pipeline = make_pipeline(RandomForestClassifier(n_estimators=50, random_state=0))
 	
@@ -104,7 +116,7 @@ def pipeline(plt_label, trainDF, testDF):
 		x_test, y_test = prepare(testDF, 0.95)
 
 	# print "Test data:: ", x_test.shape
-	tmodel = training(x_train, y_train)
+	tmodel = fit(x_train, y_train)
 	y_train_pred = tmodel.predict(x_train)
 	y_test_pred = tmodel.predict(x_test)
 	validate(plt_label, y_train_pred, y_train ,y_test_pred, y_test)

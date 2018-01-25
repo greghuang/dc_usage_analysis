@@ -5,7 +5,7 @@ import matplotlib.font_manager
 from sklearn import svm
 
 def main():
-	train_df = pd.read_csv('../data/feature/sw_training_v2.csv', index_col=0)
+	train_df = pd.read_csv('../data/feature/sw_training_v4.csv', index_col=0)
 	x_train = train_df.loc[train_df._label == 1,:]
 	x_test = train_df.loc[train_df._label == 0,:]
 	print train_df.size

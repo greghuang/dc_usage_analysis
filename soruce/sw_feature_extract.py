@@ -36,6 +36,7 @@ def transform(df):
 	'_total': scale(df['__SECURITYWARNING__total_event']),
 	'_rate': df['__SECURITYWARNING__rate'].values,
 	'_entropy_hour': df['__SECURITYWARNING__entropy_for_hours_of_day'].values,
+	'_death': scale(df['__SECURITYWARNING__death_period']),
 	'ra_network_attack': ratio(df, '__SECURITYWARNING__event_type_network_attack_prevented'),
 	'ra_weak_password': ratio(df,'__SECURITYWARNING__event_type_weak_password_detected'),
 	'ra_web_threat': ratio(df, '__SECURITYWARNING__event_type_web_threat_blocked'),
@@ -73,14 +74,12 @@ def extract(input, output):
 def main():
 	print('\n')
 	print("------------Extract Training Data------------\n")
-	# extract("../data/training/Train_extracted_security_warning_feature_2018-01-17_21-20-30.csv", '../data/feature/sw_training_v4.csv')
+	extract("../data/training/Train_extracted_security_warning_feature_2018-01-17_21-20-30.csv", '../data/feature/sw_training_v5.csv')
 
-	# print("------------Extract Testing Data------------\n")
-	# extract("../data/testing/Test_extracted_security_warning_feature_2018-01-17_21-20-30.csv", '../data/feature/sw_testing_v4.csv')
+	print("------------Extract Testing Data------------\n")
+	extract("../data/testing/Test_extracted_security_warning_feature_2018-01-17_21-20-30.csv", '../data/feature/sw_testing_v5.csv')
 
-	extract("../data/others/extracted_security_warning_feature_2018-01-23_16-28-43_24h.csv", '../data/feature/sw_testing_v5.csv')
-	# df = load("../data/others/extracted_security_warning_feature_2018-01-23_16-28-43_24h.csv")
-	# print df.shape
+	# extract("../data/others/extracted_security_warning_feature_2018-01-23_16-28-43_24h.csv", '../data/feature/sw_testing_v5.csv')
 
 if __name__ == "__main__":
     main()
