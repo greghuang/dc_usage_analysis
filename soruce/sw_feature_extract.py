@@ -29,7 +29,7 @@ def transform(df):
 	net_ddos = get_ratio_network_attack(df, '__SECURITYWARNING__payload_rule_category_DoS/DDoS')
 	net_buf_overflow = get_ratio_network_attack(df, '__SECURITYWARNING__payload_rule_category_Buffer Overflow')
 	net_access = get_ratio_network_attack(df, '__SECURITYWARNING__payload_rule_category_Access Control')
-	net_trojan = get_ratio_network_attack(df, '__SECURITYWARNING__payload_rule_category_Backdoor/Trojan')
+	# net_trojan = get_ratio_network_attack(df, '__SECURITYWARNING__payload_rule_category_Backdoor/Trojan')
 
 	data = {
 	'_label' : df['__SECURITYWARNING__station_final_status'].values,
@@ -46,7 +46,7 @@ def transform(df):
 	'net_ddos': net_ddos.values,
 	'net_buf_overflow': net_buf_overflow.values,
 	'net_access': net_access.values,
-	'net_trojan': net_trojan.values,
+	# 'net_trojan': net_trojan.values,
 	'dcnt_catid': df['__SECURITYWARNING__distinct_payload_cat_id'].values,
 	'dcnt_device': df['__SECURITYWARNING__distinct_payload_device_id'].values,
 	'dcnt_profile': df['__SECURITYWARNING__distinct_payload_profile_id'].values,
@@ -61,22 +61,26 @@ def load(path):
 	df = df[df.__SECURITYWARNING__death_period < 680400]
 	return df
 
+def extract(input, output):
+	df = load(input)
+	idDf = hashEventCase(df)
+	featureDf = pd.DataFrame(transform(df), index = idDf)
+	print "shape::", featureDf.shape
+	print "the size of 1::", len(featureDf[featureDf._label == 1].index)
+	print "the size of 0::", len(featureDf[featureDf._label == 0].index)
+	featureDf.to_csv(output)
+
 def main():
 	print('\n')
-	print("------------Load Data------------\n")
-	trainDF = load("../data/training/Train_extracted_security_warning_feature_2018-01-17_21-20-30.csv")
-	testDF = load("../data/testing/Test_extracted_security_warning_feature_2018-01-17_21-20-30.csv")
+	print("------------Extract Training Data------------\n")
+	# extract("../data/training/Train_extracted_security_warning_feature_2018-01-17_21-20-30.csv", '../data/feature/sw_training_v4.csv')
 
-	trainID = hashEventCase(trainDF)
-	testID = hashEventCase(testDF)
-	
-	trainData = pd.DataFrame(transform(trainDF), index = trainID)
-	testData = pd.DataFrame(transform(testDF), index = testID)
-	print "Train::", trainData.shape
-	print "Test::", testData.shape
-	
-	trainData.to_csv('../data/feature/sw_training_v4.csv')
-	testData.to_csv('../data/feature/sw_testing_v4.csv')
+	# print("------------Extract Testing Data------------\n")
+	# extract("../data/testing/Test_extracted_security_warning_feature_2018-01-17_21-20-30.csv", '../data/feature/sw_testing_v4.csv')
+
+	extract("../data/others/extracted_security_warning_feature_2018-01-23_16-28-43_24h.csv", '../data/feature/sw_testing_v5.csv')
+	# df = load("../data/others/extracted_security_warning_feature_2018-01-23_16-28-43_24h.csv")
+	# print df.shape
 
 if __name__ == "__main__":
     main()
