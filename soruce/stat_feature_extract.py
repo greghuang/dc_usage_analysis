@@ -54,9 +54,9 @@ def main():
 	
 	trainData = pd.DataFrame(transform(trainDF), index = trainID)
 	testData = pd.DataFrame(transform(testDF), index = testID)
-	# print trainData.shape
-	print trainData.describe()
-
+	print "Train::", trainData.shape
+	print "Test::", testData.shape
+	
 	trainData.to_csv('../data/feature/stat_training_v2.csv')
 	testData.to_csv('../data/feature/stat_testing_v2.csv')
 
